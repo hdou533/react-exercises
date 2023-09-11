@@ -1,6 +1,8 @@
+import { postsList } from '@/utils/data'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +18,28 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} w-full h-screen flex`}>
+        
+       
+        <ul className='h-full sm:block sm:w-[300px] overflow-y-scroll flex flex-col flex-wrap'>
+          <li className='text-sky-700 pl-4 pt-4 text-xl font-bold'><Link href="/">Home</Link></li>
+          {postsList.map(postTitle => postTitle.title ? (
+            <li 
+              key={`${postTitle.cat}-${postTitle.slug}`}
+              
+              className='text-slate-900 pl-4 pt-4'
+            >
+              <Link href={`/${postTitle.cat}/${postTitle.slug}`} className=''>{postTitle.title}</Link>
+            </li>) : (
+              <li key={`category-${postTitle.cat}`} className='font-bold text-xl pl-4 pt-4 text-sky-700'>{postTitle.cat}</li>
+            )
+          )}
+        </ul>
+        <div className='flex justify-center items-center sm:w-[calc(100vw-300px)] sm:h-full'>
+          {children}
+        </div>
+        
+      </body>
     </html>
   )
 }
