@@ -27,7 +27,7 @@ const FormWithReactHookForm = () => {
     }
   
   return (
-      <div className='w-full h-full p-8 flex flex-col justify-center items-center gap-8'>
+      <div className='w-full h-full p-8 flex flex-col justify-start items-center gap-16'>
         <h1 className='font-bold text-2xl'>React Form with React Hook Form</h1>
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col space-y-4 w-[360px]'>
         
