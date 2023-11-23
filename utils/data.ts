@@ -49,17 +49,4 @@ export const postsList: PostType[] = [
     slug: "next-auth",
     title: "Authentication with NextAuth.js",
   },
-  {
-    cat: "State Management",
-  },
-  {
-    cat: "state-management",
-    slug: "redux",
-    title: "State Management with Redux",
-  },
-  {
-    cat: "state-management",
-    slug: "kanban-zustand",
-    title: "Kanban app with Zustand",
-  },
 ];
