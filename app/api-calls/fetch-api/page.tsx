@@ -24,7 +24,7 @@ const FetchDataWithFetchAPI = () => {
         if (!response.ok) {
           throw new Error("fetch failed.");
         }
-        const data = (await response.json()) as string;
+        const data = await response.json();
         setImage(data.message);
       } catch (error: any) {
         if (error.name === "AbortError") {
