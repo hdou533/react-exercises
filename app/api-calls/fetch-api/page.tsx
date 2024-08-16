@@ -1,30 +1,57 @@
-'use client'
-import React, { useEffect, useState } from 'react'
+"use client";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
+const BASE_URL = "https://dog.ceo/api/breeds/image/random";
 
 const FetchDataWithFetchAPI = () => {
+  const [image, setImage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [url, setUrl] = useState('')
+  const abortControllerRef = useRef<AbortController | null>(null); //race condintion solution
 
   useEffect(() => {
-    
-    fetch("https://dog.ceo/api/breeds/image/random")
-      .then(res => res.json())
-      .then(data => setUrl(data.message))
+    const fetchImage = async () => {
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
 
-    
-      
-    
-  }, [])
+      setIsLoading(true);
+
+      try {
+        const response = await fetch(BASE_URL, {
+          signal: abortControllerRef.current?.signal,
+        });
+        if (!response.ok) {
+          throw new Error("fetch failed.");
+        }
+        const data = (await response.json()) as string;
+        setImage(data.message);
+      } catch (error: any) {
+        if (error.name === "AbortError") {
+          console.log("Aborted");
+          return;
+        }
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (!abortControllerRef.current) {
+      fetchImage();
+    }
+  }, []);
 
   return (
-    <div className='w-full h-full p-8 flex flex-col justify-start items-center gap-16'>
-      <h1 className='font-bold text-2xl'>Get Data With Fetch</h1>
-      <div>
-        <img src={url} alt="" />
-      </div>
-    </div>
-  )
-}
+    <>
+      {isLoading && <div>Loading...</div>}
+      {!isLoading && (
+        <div>
+          <Image src={image} alt="Dog image" width={500} height={500} />
+        </div>
+      )}
+    </>
+  );
+};
 
-export default FetchDataWithFetchAPI
+export default FetchDataWithFetchAPI;
